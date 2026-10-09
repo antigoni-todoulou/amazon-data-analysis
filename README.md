@@ -112,6 +112,20 @@ images/sentiment_distribution_review_summaries.png
 
 The analysis also examines the most frequently occurring review summaries within the positive and negative sentiment groups.
 
+## Key Takeaways
+
+- **Reviewer activity is highly uneven.** The analysis identifies a small group of highly active reviewers who contribute substantially more reviews than typical users, highlighting the importance of considering reviewer activity when analysing customer feedback.
+
+- **High review volume does not imply a uniform rating pattern.** Frequently reviewed products display different distributions across the 1–5 rating scale, showing that products with substantial review activity can still receive very different mixtures of customer evaluations.
+
+- **Frequent and non-frequent reviewers can be compared more meaningfully using proportions rather than raw counts.** Percentage-based rating distributions account for the large difference in group sizes and provide a clearer view of differences in rating behaviour.
+
+- **Review activity can also be examined through writing behaviour.** Comparing review word counts between frequent and non-frequent reviewers provides an additional perspective on whether highly active reviewers engage differently when writing reviews.
+
+- **Sentiment analysis complements numerical ratings.** Polarity analysis of 50,000 randomly sampled review summaries captures information contained in the written feedback that cannot be represented by star ratings alone.
+
+- **Combining structured and unstructured data produces a richer view of customer behaviour.** Reviewer activity, product ratings, review length, and textual sentiment together provide a more complete picture than any single metric in isolation.
+
 ## Tools & Technologies
 
 - Python

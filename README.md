@@ -1,1 +1,201 @@
 # amazon-data-analysis
+
+## Project Overview
+
+This project explores the Amazon Fine Food Reviews dataset using Python and SQLite, with a focus on reviewer behaviour, product ratings, review activity, review length, and sentiment.
+
+The analysis combines data cleaning, exploratory data analysis (EDA), reviewer segmentation, data visualisation, and sentiment analysis to investigate patterns in customer reviews.
+
+## Data Access
+
+The dataset used in this project is the **Amazon Fine Food Reviews** dataset, available on Kaggle:
+
+[Amazon Fine Food Reviews - Kaggle](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews)
+
+The dataset is not included in this repository. To reproduce the analysis:
+
+1. Download the dataset from Kaggle.
+2. Create a `data` directory in the project folder.
+3. Place `database.sqlite` inside the `data` directory:
+
+```text
+data/
+└── database.sqlite
+```
+
+The notebook accesses the database using:
+
+```python
+con = sqlite3.connect('data/database.sqlite')
+```
+
+## Objectives
+
+The analysis focuses on the following questions:
+
+- Who are the most active reviewers?
+- How are ratings distributed across frequently reviewed products?
+- Do frequent and non-frequent reviewers exhibit different rating behaviour?
+- Do frequent reviewers write longer reviews?
+- What is the overall sentiment expressed in review summaries?
+
+## Data Cleaning
+
+Before performing the analysis, the dataset was cleaned by:
+
+- Identifying and removing records where `HelpfulnessNumerator` exceeded `HelpfulnessDenominator`
+- Identifying and removing duplicate reviews based on `UserId`, `ProfileName`, `Time`, and `Text`
+- Converting Unix timestamps into datetime values
+- Creating a cleaned DataFrame for further analysis
+
+## Exploratory Data Analysis
+
+### 1. Most Active Reviewers
+
+Reviews were grouped by `UserId` to examine reviewer activity.
+
+For each reviewer, the analysis calculates:
+
+- Number of review summaries
+- Number of reviews
+- Average review score
+- Number of product review records
+
+The reviewers were then sorted according to their review activity to identify the ten most active reviewers.
+
+images/top_10_most_active_reviewers.png
+
+### 2. Rating Distribution of Frequently Reviewed Products
+
+Products with more than **500 review records** were classified as frequently reviewed products.
+
+The distribution of review scores from 1 to 5 was then examined across these products.
+
+images/review_scores_by_product.png
+
+### 3. Frequent vs Non-Frequent Reviewers
+
+Reviewers were segmented according to their level of activity:
+
+- **Frequent reviewers:** more than 50 reviews
+- **Non-frequent reviewers:** 50 reviews or fewer
+
+Review score distributions were calculated as percentages rather than raw counts, allowing the two reviewer groups to be compared despite differences in their sizes.
+
+images/review_scores_frequent_reviewers.png
+
+images/review_scores_non_frequent_reviewers.png
+
+### 4. Review Length Analysis
+
+Review length was measured using the number of words contained in each review.
+
+Box plots were used to compare review lengths between frequent and non-frequent reviewers.
+
+images/review_length_frequent_vs_non_frequent.png
+
+## Sentiment Analysis
+
+Sentiment analysis was performed on a reproducible random sample of **50,000 review summaries** using TextBlob.
+
+Each available review summary was assigned a polarity score and categorised as:
+
+- **Positive:** polarity > 0
+- **Neutral:** polarity = 0
+- **Negative:** polarity < 0
+
+Missing summaries were retained as missing sentiment values rather than being classified as neutral.
+
+The overall distribution provides an exploratory view of the sentiment expressed in the review summaries.
+
+images/sentiment_distribution_review_summaries.png
+
+The analysis also examines the most frequently occurring review summaries within the positive and negative sentiment groups.
+
+## Tools & Technologies
+
+- Python
+- Pandas
+- NumPy
+- SQLite
+- Matplotlib
+- Seaborn
+- TextBlob
+- Jupyter Notebook
+
+## Skills Demonstrated
+
+- Data extraction from a SQLite database
+- Data cleaning and validation
+- Duplicate detection and removal
+- Data manipulation with Pandas
+- Grouping and aggregation
+- Reviewer segmentation
+- Exploratory data analysis
+- Data visualisation
+- Text processing
+- Sentiment analysis
+- Reproducible random sampling
+
+## Repository Structure
+
+```text
+Amazon-Reviews-Analysis/
+│
+├── images/
+│   ├── top_10_active_reviewers.png
+│   ├── review_scores_by_product.png
+│   ├── review_scores_frequent_reviewers.png
+│   ├── review_scores_non_frequent_reviewers.png
+│   ├── review_length_frequent_vs_non_frequent.png
+│   └── sentiment_distribution_review_summaries.png
+│
+├── amazon_reviews_analysis.ipynb
+├── requirements.txt
+└── README.md
+```
+
+> The dataset is downloaded separately and is therefore not included in the repository structure above.
+
+## Installation
+
+Clone the repository and install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+The `requirements.txt` file contains the main external Python libraries used in the analysis:
+
+```text
+pandas
+numpy
+matplotlib
+seaborn
+textblob
+```
+
+## Running the Project
+
+1. Download the Amazon Fine Food Reviews dataset from Kaggle.
+2. Create a `data` directory in the project folder.
+3. Place `database.sqlite` inside the directory:
+
+```text
+data/database.sqlite
+```
+
+4. Open the Jupyter Notebook:
+
+```text
+amazon_reviews_analysis.ipynb
+```
+
+5. Run the notebook cells in order to reproduce the analysis.
+
+## Notes
+
+- Reviewers with more than 50 reviews are classified as frequent reviewers.
+- Products with more than 500 review records are classified as frequently reviewed products.
+- Sentiment analysis is performed on a reproducible random sample of 50,000 review summaries rather than the full review text.
+- Sentiment results should therefore be interpreted as an exploratory analysis of the language used in review summaries.

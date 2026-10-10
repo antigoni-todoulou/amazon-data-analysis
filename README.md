@@ -152,12 +152,12 @@ The analysis also examines the most frequently occurring full review texts withi
 
 The notebook calculates the following results directly from the cleaned data:
 
-- **Reviewer concentration:** The ten most active reviewers account for **[X]%** of all cleaned reviews.
-- **Frequently reviewed products:** Among products with more than 500 reviews, **[Product ID]** has the highest average rating of **[X] stars**, while **[Product ID]** has the lowest average rating of **[Y] stars**.
-- **Rating behaviour:** Frequent reviewers give an average rating of **[X] stars**, compared with **[Y] stars** among non-frequent reviewers, a difference of **[Z] stars**.
-- **Five-star ratings:** **[X]%** of reviews from frequent reviewers receive five stars, compared with **[Y]%** among non-frequent reviewers.
-- **Review length:** Frequent reviewers write a median of **[X] words** per review, compared with **[Y] words** for non-frequent reviewers.
-- **Sentiment:** **[X]%** of analysed reviews are positive, **[Y]%** neutral, and **[Z]%** negative. The dominant sentiment category is **[Positive/Neutral/Negative]**.
+- **Reviewer concentration:** The ten most active reviewers account for **0.50%** of all cleaned reviews.
+- **Frequently reviewed products:** Among products with more than 500 reviews, **B000NMJWZO** has the highest average rating of **4.88 stars**, while **B000KV61FC** has the lowest average rating of **3.41 stars**.
+- **Rating behaviour:** Frequent reviewers give an average rating of **4.33 stars**, compared with **4.18 stars** among non-frequent reviewers, a difference of **0.15 stars**.
+- **Five-star ratings:** **61.61%** of reviews from frequent reviewers receive five stars, compared with **63.76%** among non-frequent reviewers.
+- **Review length:** Frequent reviewers write a median of **113.0 words** per review, compared with **56.0 words** for non-frequent reviewers.
+- **Sentiment:** **88.47%** of analysed reviews are positive, **1.41%** neutral, and **10.12%** negative. The dominant sentiment category is **[Positive/Neutral/Negative]**.
 
 These results are descriptive relationships within the dataset and should not be interpreted as evidence of causal effects.
 

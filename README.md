@@ -2,9 +2,9 @@
 
 ## Project Overview
 
-This project explores the Amazon Fine Food Reviews dataset using Python and SQLite, with a focus on reviewer behaviour, product ratings, review activity, review length, and sentiment.
+This project explores the Amazon Fine Food Reviews dataset using Python and SQLite, with a focus on reviewer activity, product ratings, reviewer behaviour, review length, and textual sentiment.
 
-The analysis combines data cleaning, exploratory data analysis (EDA), reviewer segmentation, data visualisation, and sentiment analysis to investigate patterns in customer reviews.
+The analysis combines data cleaning, exploratory data analysis (EDA), reviewer segmentation, statistical summaries, data visualisation, and sentiment analysis to investigate how highly active reviewers behave and how review patterns vary across products and reviewer groups.
 
 ## Data Access
 
@@ -12,11 +12,13 @@ The dataset used in this project is the **Amazon Fine Food Reviews** dataset, av
 
 [Amazon Fine Food Reviews - Kaggle](https://www.kaggle.com/datasets/snap/amazon-fine-food-reviews)
 
-The dataset is not included in this repository. To reproduce the analysis:
+The dataset is not included in this repository.
+
+To reproduce the analysis:
 
 1. Download the dataset from Kaggle.
 2. Create a `data` directory in the project folder.
-3. Place `database.sqlite` inside the `data` directory:
+3. Place `database.sqlite` inside the directory:
 
 ```text
 data/
@@ -33,11 +35,12 @@ con = sqlite3.connect('data/database.sqlite')
 
 The analysis focuses on the following questions:
 
-- Who are the most active reviewers?
-- How are ratings distributed across frequently reviewed products?
-- Do frequent and non-frequent reviewers exhibit different rating behaviour?
+- Who are the most active reviewers, and how much do they contribute to the dataset?
+- How do ratings vary across frequently reviewed products?
+- Do frequent and non-frequent reviewers rate products differently?
+- Are frequent reviewers more likely to give five-star ratings?
 - Do frequent reviewers write longer reviews?
-- What is the overall sentiment expressed in review summaries?
+- What sentiment is expressed in the full review texts?
 
 ## Data Cleaning
 
@@ -46,85 +49,117 @@ Before performing the analysis, the dataset was cleaned by:
 - Identifying and removing records where `HelpfulnessNumerator` exceeded `HelpfulnessDenominator`
 - Identifying and removing duplicate reviews based on `UserId`, `ProfileName`, `Time`, and `Text`
 - Converting Unix timestamps into datetime values
-- Creating a cleaned DataFrame for further analysis
+- Creating an independent cleaned DataFrame for further analysis
 
 ## Exploratory Data Analysis
 
 ### 1. Most Active Reviewers
 
-Reviews were grouped by `UserId` to examine reviewer activity.
+Reviews were grouped by `UserId` to identify users who contributed the largest number of review records.
 
 For each reviewer, the analysis calculates:
 
-- Number of review summaries
 - Number of reviews
+- Number of review summaries
 - Average review score
-- Number of product review records
+- Number of associated product review records
 
-The reviewers were then sorted according to their review activity to identify the ten most active reviewers.
+The ten most active reviewers are visualised and their combined share of all cleaned reviews is calculated.
 
 images/top_10_most_active_reviewers.png
 
-### 2. Rating Distribution of Frequently Reviewed Products
+### 2. Ratings Across Frequently Reviewed Products
 
-Products with more than **500 review records** were classified as frequently reviewed products.
+Products with more than **500 reviews** are classified as frequently reviewed products.
 
-The distribution of review scores from 1 to 5 was then examined across these products.
+For these products, the analysis examines:
+
+- Number of reviews
+- Average rating
+- Median rating
+- Distribution of scores from 1 to 5
+- Five highest-rated frequently reviewed products
+- Five lowest-rated frequently reviewed products
+
+This makes it possible to distinguish review popularity from customer evaluation. A product may receive a large number of reviews without necessarily receiving the highest average rating.
 
 images/review_scores_by_product.png
 
-### 3. Frequent vs Non-Frequent Reviewers
+### 3. Frequent vs Non-Frequent Reviewer Rating Behaviour
 
-Reviewers were segmented according to their level of activity:
+Reviewers are segmented according to their level of activity:
 
 - **Frequent reviewers:** more than 50 reviews
 - **Non-frequent reviewers:** 50 reviews or fewer
 
-Review score distributions were calculated as percentages rather than raw counts, allowing the two reviewer groups to be compared despite differences in their sizes.
+For each group, the analysis calculates:
 
-images/review_scores_frequent_reviewers.png
+- Number of reviews
+- Average rating
+- Median rating
+- Standard deviation of ratings
+- Percentage distribution across 1–5 star scores
+- Percentage of five-star reviews
 
-images/review_scores_non_frequent_reviewers.png
+A grouped percentage chart enables direct comparison of the rating distributions while accounting for the different sizes of the two reviewer groups.
+
+images/review_scores_by_reviewer_type.png
 
 ### 4. Review Length Analysis
 
-Review length was measured using the number of words contained in each review.
+Review length is measured as the number of words in the full review text.
 
-Box plots were used to compare review lengths between frequent and non-frequent reviewers.
+The following statistics are calculated separately for frequent and non-frequent reviewers:
 
-images/review_length_frequent_vs_non_frequent.png
+- Mean word count
+- Median word count
+- Minimum word count
+- Maximum word count
+
+Because unusually long reviews can influence the mean, the median word count is also used when comparing typical review length between the two groups.
+
+Box plots provide a visual comparison of the review word-count distributions.
+
+images/review_word_count_comparison.png
 
 ## Sentiment Analysis
 
-Sentiment analysis was performed on a reproducible random sample of **50,000 review summaries** using TextBlob.
+Sentiment analysis is performed on a reproducible random sample of **50,000 full review texts**.
 
-Each available review summary was assigned a polarity score and categorised as:
+The sample is generated using:
+
+```python
+sample = data.sample(n=50000, random_state=42).copy()
+```
+
+TextBlob is used to calculate a polarity score for each review text.
+
+Reviews with available sentiment scores are categorised as:
 
 - **Positive:** polarity > 0
 - **Neutral:** polarity = 0
 - **Negative:** polarity < 0
 
-Missing summaries were retained as missing sentiment values rather than being classified as neutral.
+Missing text values are retained as missing values rather than being incorrectly classified as neutral.
 
-The overall distribution provides an exploratory view of the sentiment expressed in the review summaries.
+The analysis calculates both raw sentiment counts and percentage distributions and identifies the dominant sentiment category.
 
-images/sentiment_distribution_review_summaries.png
+images/sentiment_distribution_review_texts.png
 
-The analysis also examines the most frequently occurring review summaries within the positive and negative sentiment groups.
+The analysis also examines the most frequently occurring full review texts within the positive and negative sentiment groups.
 
-## Key Takeaways
+## Key Findings
 
-- **Reviewer activity is highly uneven.** The analysis identifies a small group of highly active reviewers who contribute substantially more reviews than typical users, highlighting the importance of considering reviewer activity when analysing customer feedback.
+The notebook calculates the following results directly from the cleaned data:
 
-- **High review volume does not imply a uniform rating pattern.** Frequently reviewed products display different distributions across the 1–5 rating scale, showing that products with substantial review activity can still receive very different mixtures of customer evaluations.
+- **Reviewer concentration:** The ten most active reviewers account for **[X]%** of all cleaned reviews.
+- **Frequently reviewed products:** Among products with more than 500 reviews, **[Product ID]** has the highest average rating of **[X] stars**, while **[Product ID]** has the lowest average rating of **[Y] stars**.
+- **Rating behaviour:** Frequent reviewers give an average rating of **[X] stars**, compared with **[Y] stars** among non-frequent reviewers, a difference of **[Z] stars**.
+- **Five-star ratings:** **[X]%** of reviews from frequent reviewers receive five stars, compared with **[Y]%** among non-frequent reviewers.
+- **Review length:** Frequent reviewers write a median of **[X] words** per review, compared with **[Y] words** for non-frequent reviewers.
+- **Sentiment:** **[X]%** of analysed reviews are positive, **[Y]%** neutral, and **[Z]%** negative. The dominant sentiment category is **[Positive/Neutral/Negative]**.
 
-- **Frequent and non-frequent reviewers can be compared more meaningfully using proportions rather than raw counts.** Percentage-based rating distributions account for the large difference in group sizes and provide a clearer view of differences in rating behaviour.
-
-- **Review activity can also be examined through writing behaviour.** Comparing review word counts between frequent and non-frequent reviewers provides an additional perspective on whether highly active reviewers engage differently when writing reviews.
-
-- **Sentiment analysis complements numerical ratings.** Polarity analysis of 50,000 randomly sampled review summaries captures information contained in the written feedback that cannot be represented by star ratings alone.
-
-- **Combining structured and unstructured data produces a richer view of customer behaviour.** Reviewer activity, product ratings, review length, and textual sentiment together provide a more complete picture than any single metric in isolation.
+These results are descriptive relationships within the dataset and should not be interpreted as evidence of causal effects.
 
 ## Tools & Technologies
 
@@ -139,22 +174,78 @@ The analysis also examines the most frequently occurring review summaries within
 
 ## Skills Demonstrated
 
-- Data extraction from a SQLite database
+- SQL-based data extraction
 - Data cleaning and validation
 - Duplicate detection and removal
-- Data manipulation with Pandas
-- Grouping and aggregation
+- Pandas grouping and aggregation
+- Descriptive statistics
 - Reviewer segmentation
 - Exploratory data analysis
+- Comparative analysis
 - Data visualisation
 - Text processing
 - Sentiment analysis
 - Reproducible random sampling
 
+## Repository Structure
 
-## Notes
+```text
+Amazon-Reviews-Analysis/
+│
+├── images/
+│   ├── top_10_active_reviewers.png
+│   ├── review_scores_by_product.png
+│   ├── review_score_distribution_by_reviewer_type.png
+│   ├── review_word_count_comparison.png
+│   └── sentiment_distribution_review_texts.png
+│
+├── amazon_reviews_analysis.ipynb
+├── requirements.txt
+└── README.md
+```
 
-- Reviewers with more than 50 reviews are classified as frequent reviewers.
+The dataset is downloaded separately and is not stored in the repository.
+
+## Installation
+
+Install the required dependencies:
+
+```bash
+pip install -r requirements.txt
+```
+
+The main external libraries used in the project are:
+
+```text
+pandas
+numpy
+matplotlib
+seaborn
+textblob
+```
+
+`sqlite3` and `collections` are part of the Python standard library and therefore do not need to be added to `requirements.txt`.
+
+## Running the Project
+
+1. Clone or download this repository.
+2. Download the Amazon Fine Food Reviews dataset from Kaggle.
+3. Create a `data` directory inside the project.
+4. Place `database.sqlite` inside the directory:
+
+```text
+data/database.sqlite
+```
+
+5. Open `amazon_reviews_analysis.ipynb`.
+6. Run the notebook cells in order to reproduce the analysis.
+
+## Methodological Notes
+
+- The threshold of more than 50 reviews is used to distinguish frequent from non-frequent reviewers.
 - Products with more than 500 review records are classified as frequently reviewed products.
-- Sentiment analysis is performed on a reproducible random sample of 50,000 review summaries rather than the full review text.
-- Sentiment results should therefore be interpreted as an exploratory analysis of the language used in review summaries.
+- Rating comparisons use both averages and medians, while rating standard deviation is included to describe variation within each reviewer group.
+- Review length is measured in words rather than characters.
+- Sentiment analysis uses a reproducible random sample of 50,000 full review texts rather than review summaries.
+- TextBlob polarity provides an exploratory measure of textual sentiment and should not be treated as a perfect classification of customer opinion.
+- The analysis is descriptive and does not establish causal relationships.

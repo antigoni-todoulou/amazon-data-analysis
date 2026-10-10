@@ -187,25 +187,6 @@ These results are descriptive relationships within the dataset and should not be
 - Sentiment analysis
 - Reproducible random sampling
 
-## Repository Structure
-
-```text
-Amazon-Reviews-Analysis/
-│
-├── images/
-│   ├── top_10_active_reviewers.png
-│   ├── review_scores_by_product.png
-│   ├── review_score_distribution_by_reviewer_type.png
-│   ├── review_word_count_comparison.png
-│   └── sentiment_distribution_review_texts.png
-│
-├── amazon_reviews_analysis.ipynb
-├── requirements.txt
-└── README.md
-```
-
-The dataset is downloaded separately and is not stored in the repository.
-
 ## Installation
 
 Install the required dependencies:
